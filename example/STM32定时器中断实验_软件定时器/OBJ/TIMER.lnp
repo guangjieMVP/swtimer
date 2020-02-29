@@ -4,6 +4,8 @@
 "..\obj\system_stm32f10x.o"
 "..\obj\software_timer.o"
 "..\obj\software_timer_test.o"
+"..\obj\cmd.o"
+"..\obj\cmd_test.o"
 "..\obj\led.o"
 "..\obj\key.o"
 "..\obj\timer.o"

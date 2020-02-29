@@ -1,0 +1,49 @@
+
+#include "cmd.h"
+#include <stdio.h>
+#include <string.h>
+
+static event_t *_event_list_begin, *_event_list_end;
+
+void event_init(void)
+{
+	event_t *index;
+#if defined(__CC_ARM) || defined(__CLANG_ARM)          /* ARM C Compiler */
+    extern const int EVENT_LIST$$Base;
+    extern const int EVENT_LIST$$Limit;
+    _event_list_begin = (event_t *)&EVENT_LIST$$Base;
+    _event_list_end   = (event_t *)&EVENT_LIST$$Limit;
+#elif defined (__ICCARM__) || defined(__ICCRX__)      /* for IAR Compiler */
+    _cmd_init(__section_begin("EVENT_LIST"), __section_end("EVENT_LIST"));
+#endif
+	for(index = _event_list_begin; index < _event_list_end; index++)
+    {
+		printf("%s\r\n",index->event_name);
+	}
+}
+
+void post_event(char *event_name)
+{
+    event_t *index;
+    for(index = _event_list_begin; index < _event_list_end; index++)
+    {
+        if(strstr(event_name,index->event_name))
+        {
+            index->event_flag = EVENT_ON;
+        }
+    }
+}
+
+void event_handle_loop(void)
+{
+    event_t *index;
+    for(index = _event_list_begin; index < _event_list_end; index++)
+    {
+        if(index->event_flag == EVENT_ON)
+        {
+            index->handler();
+            index->event_flag = EVENT_OFF;
+        }
+    }    
+}
+

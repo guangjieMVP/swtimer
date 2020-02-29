@@ -1,5 +1,6 @@
 #include "software_timer.h"
 #include "debug.h"
+#include "cmd.h"
 
 software_timer_t timer1_t;
 software_timer_t timer2_t;
@@ -11,15 +12,18 @@ software_timer_t timer3_t;
 void timer1_cb(void *parm)
 {
 	PRINT_INFO("1000ms >> dyy");
+	post_event("event1");
 }
 
 void timer2_cb(void *parm)
 {
 	PRINT_INFO("2000ms >> dyy");
+	post_event("event2");
 }
 
 void timer3_cb(void *parm)
 {
+	post_event("event3");
 	PRINT_INFO("500ms  >> dyy");
 } 
 
