@@ -11,20 +11,20 @@ software_timer_t timer3_t;
 
 void timer1_cb(void *parm)
 {
-	PRINT_INFO("1000ms >> dyy");
+//	PRINT_INFO("1000ms >> dyy");
 	post_event("event1");
 }
 
 void timer2_cb(void *parm)
 {
-	PRINT_INFO("2000ms >> dyy");
+//	PRINT_INFO("2000ms >> dyy");
 	post_event("event2");
 }
 
 void timer3_cb(void *parm)
 {
 	post_event("event3");
-	PRINT_INFO("500ms  >> dyy");
+//	PRINT_INFO("500ms  >> dyy");
 } 
 
 void timer4_cb(void *parm)

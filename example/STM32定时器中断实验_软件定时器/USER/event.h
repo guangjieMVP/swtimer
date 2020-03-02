@@ -47,8 +47,11 @@ typedef struct _event {
 	};
 
 void event_init(void);
-void post_event(char *event_name);
+void open_event(char *event_name);
+void close_event(char *event_name);
 void event_handle_loop(void);
+void set_eventtype_as_continuous(char *event_name);
+void set_eventtype_as_once(char *event_name);
 	
 #endif
 

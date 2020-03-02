@@ -4,19 +4,19 @@
 
 void event1(void)
 {
-	printf(">> guangjieSuper\r\n");
+	printf("1000ms >> RT-Thread\r\n");
 }
-REGISTER_EVENT(event1,event1);
+EVENT_EXPORT(event1,ONCE_TYPE,event1);
 
 void event2(void)
 {
-	printf(">> solawc\r\n");
+	printf("2000ms >> uCos\r\n");
 }
-REGISTER_EVENT(event2,event2);
+EVENT_EXPORT(event2,ONCE_TYPE,event2);
 
 void event3(void)
 {
-	printf(">> pzibang\r\n");
+	printf("500ms >> Linux\r\n");
 }
-REGISTER_EVENT(event3,event3);
+EVENT_EXPORT(event3,ONCE_TYPE,event3);
 

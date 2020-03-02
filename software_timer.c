@@ -4,7 +4,7 @@
 
 static software_timer_t software_timer_list_head = {0,0,(void *)0,(void *)0};
 
-static u32 timer_ticks_cnt = 0;
+// static u32 timer_ticks_cnt = 0;
 
 /**
   * @brief:         Determine if the software timer list is empty

@@ -27,9 +27,10 @@ void post_event(char *event_name)
     event_t *index;
     for(index = _event_list_begin; index < _event_list_end; index++)
     {
-        if(strstr(event_name,index->event_name))
+        if(strncmp(event_name,index->event_name,strlen(index->event_name)) == 0)
         {
-            index->event_flag = EVENT_ON;
+			if(index->event_type == ONCE_TYPE)
+				index->event_flag = EVENT_ON;
         }
     }
 }
@@ -39,11 +40,18 @@ void event_handle_loop(void)
     event_t *index;
     for(index = _event_list_begin; index < _event_list_end; index++)
     {
-        if(index->event_flag == EVENT_ON)
-        {
-            index->handler();
-            index->event_flag = EVENT_OFF;
-        }
+		if(index->event_type ==  CONTINUOUS_TYPE)
+		{
+			index->handler();
+		}
+        else if(index->event_type ==  ONCE_TYPE)
+		{
+			if(index->event_flag == EVENT_ON)
+			{
+				index->handler();
+				index->event_flag = EVENT_OFF;
+			}
+		}
     }    
 }
 
