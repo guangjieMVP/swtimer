@@ -44,8 +44,13 @@ static void insert_software_timer(software_timer_t *timer_handle)
     else
     {
         tmp = list_head->next;
+        if(tmp == timer_handle)
+        {
+            return;
+        }
         while(tmp->next)
         {
+           
 			if(timer_handle == tmp)    //定时器已经存在
 			{
 				printf("The timer already exists\r\n");
