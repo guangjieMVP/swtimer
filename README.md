@@ -1,3 +1,4 @@
 # C_SoftwareTimer
 
-A software timer written by C language
+软件定时器扩展
+
