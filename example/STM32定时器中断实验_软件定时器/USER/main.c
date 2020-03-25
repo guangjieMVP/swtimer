@@ -22,7 +22,7 @@ int main(void)
 	 
    	while(1)
 	{
-		software_timer_main_loop();
+		swtimer_handle_loop();
 		event_handle_loop();
 	}
 }	 

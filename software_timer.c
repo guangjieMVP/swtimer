@@ -2,7 +2,7 @@
 #include "software_timer.h"
 #include "string.h"
 
-static software_timer_t software_timer_list_head = {0,0,(void *)0,(void *)0};
+static swtimer_t swtimer_list_head = {0,0,(void *)0,(void *)0};
 
 // static u32 timer_ticks_cnt = 0;
 
@@ -15,12 +15,12 @@ static software_timer_t software_timer_list_head = {0,0,(void *)0,(void *)0};
   * @github:        https://github.com/EmbeddedXGJ      
   * @version:       v1.0.0
 */
-static u8 is_softtimer_list_empty(void)
+static char is_swtimer_list_empty(void)
 {
-	if(software_timer_list_head.next == NULL)
-		return TRUE;
+	if(swtimer_list_head.next == NULL)
+		return 1;
 	else
-		return FALSE;
+		return 0;
 }
 
 /**
@@ -32,33 +32,34 @@ static u8 is_softtimer_list_empty(void)
   * @github:        https://github.com/EmbeddedXGJ      
   * @version:       v1.0.0
 */
-static void insert_software_timer(software_timer_t *timer_handle)
+static void insert_swtimer(swtimer_t *timer_handle)
 {
-    software_timer_t *tmp;
-    software_timer_t *list_head = &software_timer_list_head;
+    swtimer_t *tmp;
+	swtimer_t *prev;
+    swtimer_t *list_head = &swtimer_list_head;
 
-    if(is_softtimer_list_empty())
+    if(is_swtimer_list_empty())
     {
         list_head->next = timer_handle;
     }
     else
     {
         tmp = list_head->next;
-        if(tmp == timer_handle)
+//        if(tmp == timer_handle)
+//        {
+//            return;
+//        }
+        while(tmp)
         {
-            return;
-        }
-        while(tmp->next)
-        {
-           
 			if(timer_handle == tmp)    //定时器已经存在
 			{
 				printf("The timer already exists\r\n");
 				return;
 			}
+			prev = tmp;
             tmp = tmp->next; 
         }
-        tmp->next = timer_handle;
+        prev->next = timer_handle;
     }
 }
 
@@ -71,12 +72,12 @@ static void insert_software_timer(software_timer_t *timer_handle)
   * @github:        https://github.com/EmbeddedXGJ       
   * @version:       v1.0.0
 */
-static void remove_software_timer(software_timer_t *timer_handle)
+static void remove_swtimer(swtimer_t *timer_handle)
 {
-    software_timer_t *list_head = &software_timer_list_head;
-    software_timer_t *tmp = list_head;
+    swtimer_t *list_head = &swtimer_list_head;
+    swtimer_t *tmp = list_head;
 	
-	if(is_softtimer_list_empty())
+	if(is_swtimer_list_empty())
 		return;
 	
     while(tmp && tmp->next != timer_handle)
@@ -102,7 +103,7 @@ static void remove_software_timer(software_timer_t *timer_handle)
 */
 void traverse_list(void)
 {
-	software_timer_t *tmp = &software_timer_list_head;
+	swtimer_t *tmp = &swtimer_list_head;
 	tmp = tmp->next;
 	while(tmp)
 	{
@@ -123,7 +124,7 @@ void traverse_list(void)
   * @github:        https://github.com/EmbeddedXGJ             
   * @version:       v1.0.0
 */
-void software_timer_init(software_timer_t *timer_handle,u32 timeout,u32 repeat,void (*timerout_cb)(void *))
+void swtimer_init(swtimer_t *timer_handle,unsigned int timeout,unsigned int repeat,void (*timerout_cb)(void *))
 {
 	timer_handle->timeout                  = timeout;
 	timer_handle->repeat                   = repeat;
@@ -140,9 +141,9 @@ void software_timer_init(software_timer_t *timer_handle,u32 timeout,u32 repeat,v
   * @github:        https://github.com/EmbeddedXGJ       
   * @version:       v1.0.0
 */
-void software_timer_start(software_timer_t *timer_handle)
+void swtimer_start(swtimer_t *timer_handle)
 {
-	insert_software_timer(timer_handle);         
+	insert_swtimer(timer_handle);         
 }
 
 /**
@@ -154,9 +155,9 @@ void software_timer_start(software_timer_t *timer_handle)
   * @github:        https://github.com/EmbeddedXGJ      
   * @version:       v1.0.0
 */
-void software_timer_stop(software_timer_t *timer_handle)
+void swtimer_stop(swtimer_t *timer_handle)
 {
-	remove_software_timer(timer_handle);        
+	remove_swtimer(timer_handle);        
 }
 
 
@@ -169,9 +170,9 @@ void software_timer_stop(software_timer_t *timer_handle)
   * @github:        https://github.com/EmbeddedXGJ       
   * @version:       v1.0.0
 */
-void software_timer_main_loop(void)
+void swtimer_handle_loop(void)
 {
-    software_timer_t *tmp = &software_timer_list_head;
+    swtimer_t *tmp = &swtimer_list_head;
 	tmp = tmp->next;
 	
     while(tmp)
@@ -186,7 +187,7 @@ void software_timer_main_loop(void)
 			}
 			else     
 			{
-				software_timer_stop(tmp);
+				swtimer_stop(tmp);
 			}
 		}
 		tmp = tmp->next;
@@ -202,9 +203,9 @@ void software_timer_main_loop(void)
   * @github:        https://github.com/EmbeddedXGJ      
   * @version:       v1.0.0
 */
-void software_timer_ticks(void)
+void swtimer_ticks(void)
 {
-    software_timer_t *tmp = &software_timer_list_head;
+    swtimer_t *tmp = &swtimer_list_head;
 	tmp = tmp->next;
 	
 	while(tmp)
