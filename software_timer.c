@@ -38,7 +38,7 @@ static void insert_swtimer(swtimer_t *timer_handle)
 	swtimer_t *prev;
     swtimer_t *list_head = &swtimer_list_head;
 
-    if(is_swtimer_list_empty())
+    if(is_swtimer_list_empty() || !timer_handle)
     {
         list_head->next = timer_handle;
     }
@@ -77,7 +77,7 @@ static void remove_swtimer(swtimer_t *timer_handle)
     swtimer_t *list_head = &swtimer_list_head;
     swtimer_t *tmp = list_head;
 	
-	if(is_swtimer_list_empty())
+	if(is_swtimer_list_empty() || !timer_handle)
 		return;
 	
     while(tmp && tmp->next != timer_handle)
@@ -126,6 +126,9 @@ void traverse_list(void)
 */
 void swtimer_init(swtimer_t *timer_handle,unsigned int timeout,unsigned int repeat,void (*timerout_cb)(void *))
 {
+	if(!timer_handle || timeout <= 0)
+		return;
+	
 	timer_handle->timeout                  = timeout;
 	timer_handle->repeat                   = repeat;
 	timer_handle->timeout_callback_handler = timerout_cb;
@@ -143,6 +146,9 @@ void swtimer_init(swtimer_t *timer_handle,unsigned int timeout,unsigned int repe
 */
 void swtimer_start(swtimer_t *timer_handle)
 {
+	if(!timer_handle)
+		return;
+	
 	insert_swtimer(timer_handle);         
 }
 
@@ -157,6 +163,9 @@ void swtimer_start(swtimer_t *timer_handle)
 */
 void swtimer_stop(swtimer_t *timer_handle)
 {
+	if(!timer_handle)
+		return;
+	
 	remove_swtimer(timer_handle);        
 }
 
@@ -179,8 +188,6 @@ void swtimer_handle_loop(void)
     {
 		if(tmp->timeout <= 0)
 		{
-            tmp->timeout_callback_handler((void *)0);
-
 			if(tmp->repeat > 0)
 			{
 				tmp->timeout = tmp->repeat;
@@ -189,6 +196,7 @@ void swtimer_handle_loop(void)
 			{
 				swtimer_stop(tmp);
 			}
+            tmp->timeout_callback_handler((void *)0);
 		}
 		tmp = tmp->next;
     } 
