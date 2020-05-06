@@ -60,4 +60,14 @@ int main(void)
 		swtimer_handle_loop();
 	}
 }	 
+
+
+void TIM3_IRQHandler(void)   //TIM3中断  1ms中断
+{
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  //检查TIM3更新中断发生与否
+	{
+		timer_ticks();
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //清除TIMx更新中断标志 
+	}
+}
  
